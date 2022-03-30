@@ -33,7 +33,15 @@ pub fn wait(
 
     match event_time.datetime {
         Some(datetime) => {
-            let wait_until = datetime + offset;
+            let mut wait_until = datetime + offset;
+
+            //TODO: m2 parameters --no-later-than, --no-earlier-than
+            if wait_until.time() < NaiveTime::from_hms(7, 0, 0) {
+                wait_until = wait_until.with_hour(7).unwrap();
+            }
+            if wait_until.time() > NaiveTime::from_hms(23, 0, 0) {
+                wait_until = wait_until.with_hour(23).unwrap();
+            }
 
             let local_time = Local::now();
             let local_time =
